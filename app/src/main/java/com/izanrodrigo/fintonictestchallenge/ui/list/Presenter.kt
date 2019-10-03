@@ -3,6 +3,10 @@ package com.izanrodrigo.fintonictestchallenge.ui.list
 import android.os.Parcelable
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroesRepository
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * Created by Izan on 2019-10-02.
@@ -22,7 +26,12 @@ interface SuperheroesListView {
 
 class SuperheroesListPresenter(
     private val repository: SuperheroesRepository
-) {
+): CoroutineScope {
+    private val job = Job()
+
+    override val coroutineContext
+        get() = job + Dispatchers.Main
+
     private var view: SuperheroesListView? = null
 
     fun attachView(view: SuperheroesListView) {
@@ -30,31 +39,34 @@ class SuperheroesListPresenter(
     }
 
     fun detachView() {
-        // TODO: Cancel subscriptions / coroutines.
+        job.cancel()
         view = null
     }
 
     fun viewDidLoad() {
-        view?.showLoading()
+        launch {
+            view?.showLoading()
 
-        // TODO: Handle execution context changes.
-        repository.getSuperheroes { result ->
-            result.mapCatching { list ->
-                list.map {
-                    SuperheroesListViewModel(it.name, it.photoUrl)
+            repository.getSuperheroesAsync()
+                .await()
+                .mapCatching { list ->
+                    list.map {
+                        SuperheroesListViewModel(it.name, it.photoUrl)
+                    }
+                }.onSuccess {
+                    view?.showItems(it)
+                }.onFailure {
+                    view?.showError()
                 }
-            }.onSuccess {
-                view?.showItems(it)
-            }.onFailure {
-                view?.showError()
-            }
         }
     }
 
     fun itemClicked(item: SuperheroesListViewModel) {
-        // TODO: Navigate to detail screen.
-        repository.getSuperheroByName(item.name) { result ->
-            println(result)
+        launch {
+            // TODO: Navigate to detail screen.
+            repository.getSuperheroByNameAsync(item.name)
+                .await()
+                .onSuccess { println(it) }
         }
     }
 }

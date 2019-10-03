@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/superheroPhoto"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="@dimen/superhero_list_item_photo_size"
+        android:layout_height="@dimen/superhero_list_item_photo_size"
         android:scaleType="centerCrop" />
 
     <TextView

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="superhero_list_item_photo_size">75dp</dimen>
+</resources>
