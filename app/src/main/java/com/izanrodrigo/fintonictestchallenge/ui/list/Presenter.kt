@@ -26,7 +26,7 @@ interface SuperheroesListView {
 
 class SuperheroesListPresenter(
     private val repository: SuperheroesRepository
-): CoroutineScope {
+) : CoroutineScope {
     private val job = Job()
 
     override val coroutineContext
@@ -47,11 +47,10 @@ class SuperheroesListPresenter(
         launch {
             view?.showLoading()
 
-            repository.getSuperheroesAsync()
-                .await()
+            repository.getSuperheroes()
                 .mapCatching { list ->
                     list.map {
-                        SuperheroesListViewModel(it.name, it.photoUrl)
+                        SuperheroesListViewModel(it.name, it.photo)
                     }
                 }.onSuccess {
                     view?.showItems(it)
@@ -62,11 +61,6 @@ class SuperheroesListPresenter(
     }
 
     fun itemClicked(item: SuperheroesListViewModel) {
-        launch {
-            // TODO: Navigate to detail screen.
-            repository.getSuperheroByNameAsync(item.name)
-                .await()
-                .onSuccess { println(it) }
-        }
+        // TODO: Navigate to detail screen.
     }
 }

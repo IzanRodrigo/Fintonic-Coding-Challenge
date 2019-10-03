@@ -6,7 +6,7 @@ package com.izanrodrigo.fintonictestchallenge.data
 
 data class Superhero(
     val name: String,
-    val photoUrl: String,
+    val photo: String,
     val realName: String,
     val height: String,
     val power: String,
