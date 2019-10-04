@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.izanrodrigo.fintonictestchallenge.R
+import com.izanrodrigo.fintonictestchallenge.app.Navigator
+import com.izanrodrigo.fintonictestchallenge.data.Superhero
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerAdapter
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerHolder
 import com.izanrodrigo.fintonictestchallenge.util.extensions.context
@@ -25,12 +27,12 @@ import org.koin.core.parameter.parametersOf
 
 private const val ARG_DATA = "ARG_DATA"
 
-class SuperheroesListFragment : Fragment(), SuperheroesListView {
+class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     private val presenter by inject<SuperheroesListPresenter> {
-        parametersOf(findNavController())
+        parametersOf(this)
     }
 
-    private var data: ArrayList<SuperheroesListViewModel>? = null
+    private var data: ArrayList<Superhero>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +48,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView {
 
         presenter.attachView(this)
 
-        val data = savedInstanceState?.getParcelableArrayList<SuperheroesListViewModel>(ARG_DATA)
+        val data = savedInstanceState?.getParcelableArrayList<Superhero>(ARG_DATA)
         if (data == null) {
             presenter.viewDidLoad()
         } else {
@@ -74,7 +76,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView {
         progressBar.visibility = View.VISIBLE
     }
 
-    override fun showItems(list: List<SuperheroesListViewModel>) {
+    override fun showItems(list: List<Superhero>) {
         data = ArrayList(list)
 
         println("[SuperheroesList] Items loaded: $list")
@@ -88,11 +90,17 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView {
         println("[SuperheroesList] Error")
         progressBar.visibility = View.GONE
     }
+
+    override fun goToSuperheroDetail(superhero: Superhero) {
+        val directions = SuperheroesListFragmentDirections
+            .goToSuperheroDetail(superhero)
+        findNavController().navigate(directions)
+    }
 }
 
 private class SuperheroesAdapter(
-    val list: List<SuperheroesListViewModel>,
-    val onClick: (SuperheroesListViewModel) -> Unit
+    val list: List<Superhero>,
+    val onClick: (Superhero) -> Unit
 ) : RecyclerAdapter<RecyclerHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         LayoutInflater.from(parent.context)
@@ -109,7 +117,7 @@ private class SuperheroesAdapter(
         holder.superheroRealName.text = item.realName
 
         Glide.with(holder.context)
-            .load(item.photoUrl)
+            .load(item.photo)
             .centerCrop()
             .apply(RequestOptions.circleCropTransform())
             .into(holder.superheroPhoto)

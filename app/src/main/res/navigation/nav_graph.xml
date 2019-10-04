@@ -21,7 +21,7 @@
         android:id="@+id/superheroFragment"
         android:name="com.izanrodrigo.fintonictestchallenge.ui.detail.SuperheroDetailFragment">
         <argument
-            android:name="superheroName"
-            app:argType="string" />
+            android:name="superhero"
+            app:argType="com.izanrodrigo.fintonictestchallenge.data.Superhero" />
     </fragment>
 </navigation>

@@ -9,7 +9,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.izanrodrigo.fintonictestchallenge.R
-import com.izanrodrigo.fintonictestchallenge.data.Superhero
+import com.izanrodrigo.fintonictestchallenge.data.SuperheroDetail
 import kotlinx.android.synthetic.main.fragment_superhero_detail.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -23,10 +23,18 @@ private const val ARG_DATA = "ARG_DATA"
 class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
     private val args by navArgs<SuperheroDetailFragmentArgs>()
 
+    private inline val superhero
+        get() = args.superhero
+
     private val presenter by inject<SuperheroDetailPresenter> {
-        parametersOf(args.superheroName)
+        parametersOf(superhero.name)
     }
-    private var data: Superhero? = null
+
+    private val contentViews by lazy {
+        listOf(superheroPowerCard, superheroAbilitiesCard, superheroGroupsCard)
+    }
+
+    private var data: SuperheroDetail? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +48,16 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
 
         presenter.attachView(this)
 
-        val data = savedInstanceState?.getParcelable<Superhero>(ARG_DATA)
+        Glide.with(this)
+            .load(superhero.photo)
+            .centerCrop()
+            .apply(RequestOptions.circleCropTransform())
+            .into(superheroPhoto)
+
+        superheroName.text = superhero.name
+        superheroRealName.text = superhero.realName
+
+        val data = savedInstanceState?.getParcelable<SuperheroDetail>(ARG_DATA)
         if (data == null) {
             presenter.viewDidLoad()
         } else {
@@ -50,7 +67,7 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        requireActivity().title = args.superheroName
+        requireActivity().title = superhero.name
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -64,34 +81,23 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
     }
 
     override fun showLoading() {
-        println("[SuperheroDetail] Loading...")
-        contentView.visibility = View.GONE
+        contentViews.forEach { it.visibility = View.GONE }
         progressBar.visibility = View.VISIBLE
     }
 
-    override fun showItem(item: Superhero) {
+    override fun showItem(item: SuperheroDetail) {
         data = item
 
-        println("[SuperheroDetail] Item loaded: $item")
         progressBar.visibility = View.GONE
-        contentView.visibility = View.VISIBLE
+        contentViews.forEach { it.visibility = View.VISIBLE }
 
-        Glide.with(this)
-            .load(item.photo)
-            .centerCrop()
-            .apply(RequestOptions.circleCropTransform())
-            .into(superheroPhoto)
-
-        superheroName.text = item.name
-        superheroRealName.text = item.realName
         superheroPower.text = item.power
         superheroAbilities.text = item.abilities
         superheroGroups.text = item.groups
     }
 
     override fun showError() {
-        println("[SuperheroDetail] Error")
-        contentView.visibility = View.GONE
+        contentViews.forEach { it.visibility = View.GONE }
         progressBar.visibility = View.GONE
         // TODO: Show error view.
     }

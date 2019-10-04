@@ -10,8 +10,15 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Superhero(
     val name: String,
-    val photo: String,
     val realName: String,
+    val photo: String
+) : Parcelable
+
+@Parcelize
+data class SuperheroDetail(
+    val name: String,
+    val realName: String,
+    val photo: String,
     val height: String,
     val power: String,
     val abilities: String,

@@ -1,9 +1,8 @@
 package com.izanrodrigo.fintonictestchallenge.ui.list
 
-import android.os.Parcelable
 import com.izanrodrigo.fintonictestchallenge.app.Navigator
+import com.izanrodrigo.fintonictestchallenge.data.Superhero
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroesRepository
-import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,16 +12,9 @@ import kotlinx.coroutines.launch
  * Created by Izan on 2019-10-02.
  */
 
-@Parcelize
-data class SuperheroesListViewModel(
-    val name: String,
-    val realName: String,
-    val photoUrl: String
-) : Parcelable
-
 interface SuperheroesListView {
     fun showLoading()
-    fun showItems(list: List<SuperheroesListViewModel>)
+    fun showItems(list: List<Superhero>)
     fun showError()
 }
 
@@ -51,11 +43,7 @@ class SuperheroesListPresenter(
             view?.showLoading()
 
             repository.getSuperheroes()
-                .mapCatching { list ->
-                    list.map {
-                        SuperheroesListViewModel(it.name, it.realName, it.photo)
-                    }
-                }.onSuccess {
+                .onSuccess {
                     view?.showItems(it)
                 }.onFailure {
                     view?.showError()
@@ -63,7 +51,7 @@ class SuperheroesListPresenter(
         }
     }
 
-    fun itemClicked(item: SuperheroesListViewModel) {
-        navigator.goToSuperheroDetail(item.name)
+    fun itemClicked(item: Superhero) {
+        navigator.goToSuperheroDetail(item)
     }
 }

@@ -1,6 +1,6 @@
 package com.izanrodrigo.fintonictestchallenge.ui.detail
 
-import com.izanrodrigo.fintonictestchallenge.data.Superhero
+import com.izanrodrigo.fintonictestchallenge.data.SuperheroDetail
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 interface SuperheroDetailView {
     fun showLoading()
-    fun showItem(item: Superhero)
+    fun showItem(item: SuperheroDetail)
     fun showError()
 }
 

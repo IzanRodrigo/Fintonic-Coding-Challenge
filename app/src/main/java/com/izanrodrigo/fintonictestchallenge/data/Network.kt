@@ -7,7 +7,7 @@ import retrofit2.http.GET
  */
 
 data class SuperheroesListResponse(
-    val superheroes: List<Superhero>
+    val superheroes: List<SuperheroDetail>
 )
 
 interface SuperheroApiService {
