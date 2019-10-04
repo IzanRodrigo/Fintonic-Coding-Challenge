@@ -17,5 +17,8 @@ class SuperheroesRepository(
         }
     }
 
-    suspend fun getSuperheroByName(name: String): Result<Superhero> = TODO()
+    suspend fun getSuperheroByName(name: String): Result<Superhero> {
+        // FIXME: This is temporary, use cached data instead.
+        return getSuperheroes().mapCatching { it.first { it.name == name } }
+    }
 }

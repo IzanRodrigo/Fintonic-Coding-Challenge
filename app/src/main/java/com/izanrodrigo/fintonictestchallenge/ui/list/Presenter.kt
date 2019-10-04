@@ -1,6 +1,7 @@
 package com.izanrodrigo.fintonictestchallenge.ui.list
 
 import android.os.Parcelable
+import com.izanrodrigo.fintonictestchallenge.app.Navigator
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroesRepository
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +26,8 @@ interface SuperheroesListView {
 }
 
 class SuperheroesListPresenter(
-    private val repository: SuperheroesRepository
+    private val repository: SuperheroesRepository,
+    private val navigator: Navigator
 ) : CoroutineScope {
     private val job = Job()
 
@@ -61,6 +63,6 @@ class SuperheroesListPresenter(
     }
 
     fun itemClicked(item: SuperheroesListViewModel) {
-        // TODO: Navigate to detail screen.
+        navigator.goToSuperheroDetail(item.name)
     }
 }

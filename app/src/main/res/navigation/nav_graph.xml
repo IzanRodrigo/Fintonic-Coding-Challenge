@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/superheroesListFragment">
+
+    <fragment
+        android:id="@+id/superheroesListFragment"
+        android:name="com.izanrodrigo.fintonictestchallenge.ui.list.SuperheroesListFragment"
+        android:label="@string/fragment_superheroes_list_title">
+        <action
+            android:id="@+id/goToSuperheroDetail"
+            app:destination="@id/superheroFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/superheroesListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/superheroFragment"
+        android:name="com.izanrodrigo.fintonictestchallenge.ui.detail.SuperheroDetailFragment">
+        <argument
+            android:name="superheroName"
+            app:argType="string" />
+    </fragment>
+</navigation>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fintonic Test Challenge</string>
+    <string name="fragment_superheroes_list_title">Superheroes</string>
 </resources>

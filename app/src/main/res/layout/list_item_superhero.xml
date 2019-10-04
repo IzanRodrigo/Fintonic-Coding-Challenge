@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:background="?selectableItemBackground">
 
     <ImageView
         android:id="@+id/superheroPhoto"
         android:layout_width="@dimen/superhero_list_item_photo_size"
         android:layout_height="@dimen/superhero_list_item_photo_size"
-        android:scaleType="centerCrop" />
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/superheroName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/superheroPhoto"
         android:fontFamily="sans-serif-medium"
         android:textSize="18sp"
         tools:text="Carol Danvers" />
 
-</LinearLayout>
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/superhero_list_divider_size"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/superheroPhoto"
+        android:background="@color/superhero_list_divider" />
+
+</RelativeLayout>

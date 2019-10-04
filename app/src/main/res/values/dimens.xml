@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="superhero_list_divider_size">0.5dp</dimen>
     <dimen name="superhero_list_item_photo_size">75dp</dimen>
+    <dimen name="superhero_detail_photo_size">125dp</dimen>
+    <dimen name="superhero_detail_card_corner_radius">4dp</dimen>
 </resources>
