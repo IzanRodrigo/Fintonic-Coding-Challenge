@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground">
@@ -11,24 +13,41 @@
         android:layout_height="@dimen/superhero_list_item_photo_size"
         android:layout_margin="16dp"
         android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/superheroName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/superheroPhoto"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-medium"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/superheroRealName"
+        app:layout_constraintStart_toEndOf="@id/superheroPhoto"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Carol Danvers" />
+
+    <TextView
+        android:id="@+id/superheroRealName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/superheroName"
+        app:layout_constraintTop_toBottomOf="@id/superheroName"
         tools:text="Carol Danvers" />
 
     <View
         android:id="@+id/view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/superhero_list_divider_size"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/superheroPhoto"
-        android:background="@color/superhero_list_divider" />
+        android:layout_marginTop="16dp"
+        android:background="@color/superhero_list_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/superheroName"
+        app:layout_constraintTop_toBottomOf="@id/superheroPhoto" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

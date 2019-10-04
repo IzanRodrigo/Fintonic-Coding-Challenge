@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 @Parcelize
 data class SuperheroesListViewModel(
     val name: String,
+    val realName: String,
     val photoUrl: String
 ) : Parcelable
 
@@ -52,7 +53,7 @@ class SuperheroesListPresenter(
             repository.getSuperheroes()
                 .mapCatching { list ->
                     list.map {
-                        SuperheroesListViewModel(it.name, it.photo)
+                        SuperheroesListViewModel(it.name, it.realName, it.photo)
                     }
                 }.onSuccess {
                     view?.showItems(it)

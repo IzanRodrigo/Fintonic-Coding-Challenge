@@ -106,6 +106,7 @@ private class SuperheroesAdapter(
         val item = list[position]
         holder.itemView.setOnClickListener { onClick(item) }
         holder.superheroName.text = item.name
+        holder.superheroRealName.text = item.realName
 
         Glide.with(holder.context)
             .load(item.photoUrl)
