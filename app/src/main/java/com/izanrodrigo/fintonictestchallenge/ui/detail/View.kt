@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.izanrodrigo.fintonictestchallenge.R
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroDetail
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_superhero_detail.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -36,6 +37,11 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
 
     private var data: SuperheroDetail? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        data = savedInstanceState?.getParcelable(ARG_DATA)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,6 +54,11 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
 
         presenter.attachView(this)
 
+        errorText.setText(R.string.superhero_detail_error_load)
+        retryButton.setOnClickListener {
+            presenter.retryClicked()
+        }
+
         Glide.with(this)
             .load(superhero.photo)
             .centerCrop()
@@ -57,7 +68,7 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
         superheroName.text = superhero.name
         superheroRealName.text = superhero.realName
 
-        val data = savedInstanceState?.getParcelable<SuperheroDetail>(ARG_DATA)
+        val data = data
         if (data == null) {
             presenter.viewDidLoad()
         } else {
@@ -81,6 +92,8 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
     }
 
     override fun showLoading() {
+        superheroErrorCard.visibility = View.GONE
+        errorLayout.visibility = View.GONE
         contentViews.forEach { it.visibility = View.GONE }
         progressBar.visibility = View.VISIBLE
     }
@@ -89,6 +102,8 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
         data = item
 
         progressBar.visibility = View.GONE
+        superheroErrorCard.visibility = View.GONE
+        errorLayout.visibility = View.GONE
         contentViews.forEach { it.visibility = View.VISIBLE }
 
         superheroPower.text = item.power
@@ -99,6 +114,7 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
     override fun showError() {
         contentViews.forEach { it.visibility = View.GONE }
         progressBar.visibility = View.GONE
-        // TODO: Show error view.
+        superheroErrorCard.visibility = View.VISIBLE
+        errorLayout.visibility = View.VISIBLE
     }
 }

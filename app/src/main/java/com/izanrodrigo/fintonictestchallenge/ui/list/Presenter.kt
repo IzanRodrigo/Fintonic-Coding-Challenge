@@ -40,11 +40,11 @@ class SuperheroesListPresenter(
 
     fun viewDidLoad() = loadData()
 
-    fun itemClicked(item: Superhero) {
-        navigator.goToSuperheroDetail(item)
-    }
+    fun itemClicked(item: Superhero) = navigator.goToSuperheroDetail(item)
 
     fun refreshStarted() = loadData(refresh = true)
+
+    fun retryClicked() = loadData()
 
     private fun loadData(refresh: Boolean = false) {
         launch {

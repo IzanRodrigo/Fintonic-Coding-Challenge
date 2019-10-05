@@ -1,7 +1,6 @@
 package com.izanrodrigo.fintonictestchallenge.util.extensions
 
 import android.content.Context
-import android.graphics.Rect
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
@@ -16,23 +15,6 @@ inline val RecyclerView.Adapter<*>.isEmpty: Boolean
 
 inline val RecyclerView.ViewHolder.context: Context
     get() = itemView.context
-
-/* Source: http://stackoverflow.com/a/27037230 */
-fun RecyclerView.addVerticalSpaceBetweenItems(heightPx: Int) {
-    addItemDecoration(object : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            val adapter = parent.adapter ?: return
-            if (parent.getChildAdapterPosition(view) != adapter.itemCount - 1) {
-                outRect.bottom = heightPx
-            }
-        }
-    })
-}
 
 open class RecyclerHolder(
     override val containerView: View

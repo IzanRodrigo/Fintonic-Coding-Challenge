@@ -9,13 +9,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.izanrodrigo.fintonictestchallenge.R
 import com.izanrodrigo.fintonictestchallenge.app.Navigator
 import com.izanrodrigo.fintonictestchallenge.data.Superhero
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerAdapter
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerHolder
 import com.izanrodrigo.fintonictestchallenge.util.extensions.context
+import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_superheroes_list.*
+import kotlinx.android.synthetic.main.fragment_superheroes_list.errorLayout
 import kotlinx.android.synthetic.main.list_item_superhero.*
 import kotlinx.android.synthetic.main.list_item_superhero.view.*
 import org.koin.android.ext.android.inject
@@ -34,6 +37,11 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
 
     private var data: ArrayList<Superhero>? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        data = savedInstanceState?.getParcelableArrayList<Superhero>(ARG_DATA)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,6 +52,8 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        presenter.attachView(this)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
@@ -51,9 +61,12 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
             presenter.refreshStarted()
         }
 
-        presenter.attachView(this)
+        errorText.setText(R.string.superheroes_list_error_load)
+        retryButton.setOnClickListener {
+            presenter.retryClicked()
+        }
 
-        val data = savedInstanceState?.getParcelableArrayList<Superhero>(ARG_DATA)
+        val data = data
         if (data == null) {
             presenter.viewDidLoad()
         } else {
@@ -77,6 +90,8 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     override fun showLoading() {
+        errorLayout.visibility = View.GONE
+
         // Display global progress bar only the first time.
         if (data.isNullOrEmpty()) {
             progressBar.visibility = View.VISIBLE
@@ -89,6 +104,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
         data = ArrayList(list)
 
         progressBar.visibility = View.GONE
+        errorLayout.visibility = View.GONE
         refreshLayout.isRefreshing = false
 
         recyclerView.adapter = SuperheroesAdapter(list) {
@@ -99,7 +115,13 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     override fun showError() {
         progressBar.visibility = View.GONE
         refreshLayout.isRefreshing = false
-        // TODO: Show error view.
+
+        if (data.isNullOrEmpty()) {
+            errorLayout.visibility = View.VISIBLE
+        } else {
+            Snackbar.make(content, R.string.superheroes_list_error_refresh, Snackbar.LENGTH_SHORT)
+                .show()
+        }
     }
 
     override fun goToSuperheroDetail(superhero: Superhero) {

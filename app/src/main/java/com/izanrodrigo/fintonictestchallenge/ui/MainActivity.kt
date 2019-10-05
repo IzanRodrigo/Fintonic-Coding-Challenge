@@ -19,7 +19,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        navController.popBackStack()
+        if (!navController.popBackStack()) {
+            super.onBackPressed()
+        }
     }
 
     override fun onSupportNavigateUp() =

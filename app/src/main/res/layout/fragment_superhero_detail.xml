@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Power"
+                        android:text="@string/superhero_detail_section_power_title"
                         android:textSize="18sp" />
 
                     <TextView
@@ -107,7 +107,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Abilities"
+                        android:text="@string/superhero_detail_section_abilities_title"
                         android:textSize="18sp" />
 
                     <TextView
@@ -139,7 +139,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:text="Groups"
+                        android:text="@string/superhero_detail_section_groups_title"
                         android:textSize="18sp" />
 
                     <TextView
@@ -151,6 +151,21 @@
                         tools:text="Secret Avengers; formerly the Avengers, Invaders, Captain's Unnamed Superhero Team, Redeemers; formerly partner of Winter Soldier, Bucky, Jones, Rick, Rick Jones, Falcon (Sam Wilson), Falcon, Demolition Man and Nomad (Jack Monroe)" />
 
                 </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/superheroErrorCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="@dimen/superhero_detail_card_corner_radius">
+
+                <include
+                    layout="@layout/error_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp" />
 
             </androidx.cardview.widget.CardView>
 

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Fintonic Test Challenge</string>
     <string name="fragment_superheroes_list_title">Superheroes</string>
+    <string name="superheroes_list_error_refresh">Unable to refresh the list of superheroes</string>
+    <string name="superheroes_list_error_load">Unable to load the list of superheroes</string>
+    <string name="superhero_detail_error_load">Unable to load the superhero</string>
+    <string name="retry">Retry</string>
+    <string name="superhero_detail_section_power_title">Power</string>
+    <string name="superhero_detail_section_abilities_title">Abilities</string>
+    <string name="superhero_detail_section_groups_title">Groups</string>
 </resources>

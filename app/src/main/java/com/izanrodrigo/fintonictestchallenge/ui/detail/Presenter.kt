@@ -37,7 +37,11 @@ class SuperheroDetailPresenter(
         view = null
     }
 
-    fun viewDidLoad() {
+    fun viewDidLoad() = loadData()
+
+    fun retryClicked() = loadData()
+
+    private fun loadData() {
         launch {
             view?.showLoading()
 

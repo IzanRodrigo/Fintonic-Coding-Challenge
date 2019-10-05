@@ -4,4 +4,5 @@
     <dimen name="superhero_list_item_photo_size">75dp</dimen>
     <dimen name="superhero_detail_photo_size">125dp</dimen>
     <dimen name="superhero_detail_card_corner_radius">4dp</dimen>
+    <dimen name="superheroes_list_retry_button">250dp</dimen>
 </resources>
