@@ -1,6 +1,9 @@
 package com.izanrodrigo.fintonictestchallenge.data
 
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -14,13 +17,14 @@ data class Superhero(
     val photo: String
 ) : Parcelable
 
+@Entity(tableName = "superheroes")
 @Parcelize
 data class SuperheroDetail(
-    val name: String,
-    val realName: String,
-    val photo: String,
-    val height: String,
-    val power: String,
-    val abilities: String,
-    val groups: String
+    @PrimaryKey val name: String,
+    @ColumnInfo val realName: String,
+    @ColumnInfo val photo: String,
+    @ColumnInfo val height: String,
+    @ColumnInfo val power: String,
+    @ColumnInfo val abilities: String,
+    @ColumnInfo val groups: String
 ) : Parcelable

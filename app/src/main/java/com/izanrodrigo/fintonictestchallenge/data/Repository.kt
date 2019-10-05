@@ -1,18 +1,32 @@
 package com.izanrodrigo.fintonictestchallenge.data
 
+import android.content.res.Resources
+
 /**
  * Created by Izan on 2019-10-02.
  */
 
 class SuperheroesRepository(
-    private val apiService: SuperheroApiService
+    private val apiService: SuperheroApiService,
+    private val dao: SuperheroesDao
 ) {
-    suspend fun getSuperheroes(): Result<List<Superhero>> {
-        // TODO: Cache data?
-        return try {
-            val list = apiService.getSuperheroes()
+    /**
+     * Returns the list of superheroes.
+     * By default, it uses the cached data unless [refresh] is true.
+     * If there's nothing cached, the data is fetched from network.
+     */
+    suspend fun getSuperheroes(refresh: Boolean = false): Result<List<Superhero>> {
+        suspend fun fetchAndCacheData() =
+            apiService.getSuperheroes()
                 .superheroes
-                .map(::superhero)
+                .apply { dao.insertAll(this) }
+
+        return try {
+            val list = if (refresh || dao.isEmpty()) {
+                fetchAndCacheData()
+            } else {
+                dao.getAll()
+            }.map(::superhero)
             Result.success(list)
         } catch (ex: Throwable) {
             Result.failure(ex)
@@ -20,12 +34,10 @@ class SuperheroesRepository(
     }
 
     suspend fun getSuperheroByName(name: String): Result<SuperheroDetail> {
-        // FIXME: This is temporary, use cached data instead.
         return try {
-            val list = apiService.getSuperheroes()
-                .superheroes
-                .first { it.name == name }
-            Result.success(list)
+            val superhero = dao.findByName(name)
+                ?: throw Resources.NotFoundException("Superhero with name = $name is not in the DB.")
+            Result.success(superhero)
         } catch (ex: Throwable) {
             Result.failure(ex)
         }

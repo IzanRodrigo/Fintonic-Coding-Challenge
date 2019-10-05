@@ -72,14 +72,12 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     override fun showLoading() {
-        println("[SuperheroesList] Loading...")
         progressBar.visibility = View.VISIBLE
     }
 
     override fun showItems(list: List<Superhero>) {
         data = ArrayList(list)
 
-        println("[SuperheroesList] Items loaded: $list")
         progressBar.visibility = View.GONE
         recyclerView.adapter = SuperheroesAdapter(list) {
             presenter.itemClicked(it)
@@ -87,8 +85,8 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     override fun showError() {
-        println("[SuperheroesList] Error")
         progressBar.visibility = View.GONE
+        // TODO: Show error view.
     }
 
     override fun goToSuperheroDetail(superhero: Superhero) {
