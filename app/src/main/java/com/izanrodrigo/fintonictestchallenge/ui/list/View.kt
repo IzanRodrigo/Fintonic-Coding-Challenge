@@ -46,6 +46,11 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        refreshLayout.setColorSchemeResources(R.color.colorAccent)
+        refreshLayout.setOnRefreshListener {
+            presenter.refreshStarted()
+        }
+
         presenter.attachView(this)
 
         val data = savedInstanceState?.getParcelableArrayList<Superhero>(ARG_DATA)
@@ -72,13 +77,20 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     override fun showLoading() {
-        progressBar.visibility = View.VISIBLE
+        // Display global progress bar only the first time.
+        if (data.isNullOrEmpty()) {
+            progressBar.visibility = View.VISIBLE
+        } else {
+            refreshLayout.isRefreshing = true
+        }
     }
 
     override fun showItems(list: List<Superhero>) {
         data = ArrayList(list)
 
         progressBar.visibility = View.GONE
+        refreshLayout.isRefreshing = false
+
         recyclerView.adapter = SuperheroesAdapter(list) {
             presenter.itemClicked(it)
         }
@@ -86,6 +98,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
 
     override fun showError() {
         progressBar.visibility = View.GONE
+        refreshLayout.isRefreshing = false
         // TODO: Show error view.
     }
 

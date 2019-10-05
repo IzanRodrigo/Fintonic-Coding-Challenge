@@ -38,20 +38,24 @@ class SuperheroesListPresenter(
         view = null
     }
 
-    fun viewDidLoad() {
+    fun viewDidLoad() = loadData()
+
+    fun itemClicked(item: Superhero) {
+        navigator.goToSuperheroDetail(item)
+    }
+
+    fun refreshStarted() = loadData(refresh = true)
+
+    private fun loadData(refresh: Boolean = false) {
         launch {
             view?.showLoading()
 
-            repository.getSuperheroes()
+            repository.getSuperheroes(refresh)
                 .onSuccess {
                     view?.showItems(it)
                 }.onFailure {
                     view?.showError()
                 }
         }
-    }
-
-    fun itemClicked(item: Superhero) {
-        navigator.goToSuperheroDetail(item)
     }
 }
