@@ -21,7 +21,7 @@ val appModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://api.myjson.com/bins/")
+            .baseUrl(SuperheroApiService.ENDPOINT)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create<SuperheroApiService>()
@@ -30,7 +30,8 @@ val appModule = module {
     single {
         Room.databaseBuilder(
             androidApplication(),
-            AppDatabase::class.java, "db.sqlite"
+            AppDatabase::class.java,
+            AppDatabase.DB_NAME
         ).build()
     }
 

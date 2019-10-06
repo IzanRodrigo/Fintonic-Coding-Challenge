@@ -8,6 +8,11 @@ import androidx.room.*
 
 @Database(entities = [SuperheroDetail::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
+    companion object {
+        const val DB_NAME = "db.sqlite"
+        const val TABLE_NAME_SUPERHEROES = "superheroes"
+    }
+
     abstract fun superheroesDao(): SuperheroesDao
 }
 

@@ -17,7 +17,7 @@ data class Superhero(
     val photo: String
 ) : Parcelable
 
-@Entity(tableName = "superheroes")
+@Entity(tableName = AppDatabase.TABLE_NAME_SUPERHEROES)
 @Parcelize
 data class SuperheroDetail(
     @PrimaryKey val name: String,

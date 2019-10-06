@@ -11,6 +11,10 @@ data class SuperheroesListResponse(
 )
 
 interface SuperheroApiService {
+    companion object {
+        const val ENDPOINT = "https://api.myjson.com/bins/"
+    }
+
     @GET("bvyob")
     suspend fun getSuperheroes(): SuperheroesListResponse
 }

@@ -155,7 +155,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 }
 
-typealias AdapterListener = (Superhero, RecyclerHolder) -> Unit
+private typealias AdapterListener = (Superhero, RecyclerHolder) -> Unit
 
 private class SuperheroesAdapter(
     val list: List<Superhero>,

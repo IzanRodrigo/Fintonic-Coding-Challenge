@@ -35,7 +35,7 @@
                         android:layout_width="@dimen/superhero_detail_photo_size"
                         android:layout_height="@dimen/superhero_detail_photo_size"
                         android:scaleType="centerCrop"
-                        tools:src="@mipmap/ic_launcher" />
+                        tools:src="@drawable/ic_sad_deadpool" />
 
                     <TextView
                         android:id="@+id/superheroName"
