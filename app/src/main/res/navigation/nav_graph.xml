@@ -23,5 +23,14 @@
         <argument
             android:name="superhero"
             app:argType="com.izanrodrigo.fintonictestchallenge.data.Superhero" />
+        <argument
+            android:name="superheroNameTransitionName"
+            app:argType="string"/>
+        <argument
+            android:name="superheroRealNameTransitionName"
+            app:argType="string"/>
+        <argument
+            android:name="superheroPhotoTransitionName"
+            app:argType="string"/>
     </fragment>
 </navigation>

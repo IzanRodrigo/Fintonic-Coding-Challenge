@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 import com.izanrodrigo.fintonictestchallenge.R
@@ -16,6 +18,7 @@ import com.izanrodrigo.fintonictestchallenge.data.Superhero
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerAdapter
 import com.izanrodrigo.fintonictestchallenge.util.extensions.RecyclerHolder
 import com.izanrodrigo.fintonictestchallenge.util.extensions.context
+import com.izanrodrigo.fintonictestchallenge.util.extensions.transitionPair
 import kotlinx.android.synthetic.main.error_layout.*
 import kotlinx.android.synthetic.main.fragment_superheroes_list.*
 import kotlinx.android.synthetic.main.fragment_superheroes_list.errorLayout
@@ -36,6 +39,7 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     private var data: ArrayList<Superhero>? = null
+    private var lastClickedHolder: RecyclerHolder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +55,17 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         presenter.attachView(this)
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.apply {
+            postponeEnterTransition()
+            viewTreeObserver
+                .addOnPreDrawListener {
+                    startPostponedEnterTransition()
+                    true
+                }
+            layoutManager = LinearLayoutManager(requireContext())
+        }
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent)
         refreshLayout.setOnRefreshListener {
@@ -84,9 +95,10 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
         data?.let { outState.putParcelableArrayList(ARG_DATA, it) }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        lastClickedHolder = null
         presenter.detachView()
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     override fun showLoading() {
@@ -107,7 +119,8 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
         errorLayout.visibility = View.GONE
         refreshLayout.isRefreshing = false
 
-        recyclerView.adapter = SuperheroesAdapter(list) {
+        recyclerView.adapter = SuperheroesAdapter(list) { it, holder ->
+            lastClickedHolder = holder
             presenter.itemClicked(it)
         }
     }
@@ -125,15 +138,28 @@ class SuperheroesListFragment : Fragment(), SuperheroesListView, Navigator {
     }
 
     override fun goToSuperheroDetail(superhero: Superhero) {
+        val holder = lastClickedHolder ?: return
         val directions = SuperheroesListFragmentDirections
-            .goToSuperheroDetail(superhero)
-        findNavController().navigate(directions)
+            .goToSuperheroDetail(
+                superhero,
+                holder.superheroName.transitionName,
+                holder.superheroRealName.transitionName,
+                holder.superheroPhoto.transitionName
+            )
+        val extras = FragmentNavigatorExtras(
+            holder.superheroName.transitionPair,
+            holder.superheroRealName.transitionPair,
+            holder.superheroPhoto.transitionPair
+        )
+        findNavController().navigate(directions, extras)
     }
 }
 
+typealias AdapterListener = (Superhero, RecyclerHolder) -> Unit
+
 private class SuperheroesAdapter(
     val list: List<Superhero>,
-    val onClick: (Superhero) -> Unit
+    val onClick: AdapterListener
 ) : RecyclerAdapter<RecyclerHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         LayoutInflater.from(parent.context)
@@ -145,7 +171,17 @@ private class SuperheroesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerHolder, position: Int) {
         val item = list[position]
-        holder.itemView.setOnClickListener { onClick(item) }
+        holder.itemView.setOnClickListener {
+            onClick(item, holder)
+        }
+
+        holder.superheroName.transitionName =
+            holder.context.getString(R.string.transition_name_superhero_name, position)
+        holder.superheroRealName.transitionName =
+            holder.context.getString(R.string.transition_name_superhero_real_name, position)
+        holder.superheroPhoto.transitionName =
+            holder.context.getString(R.string.transition_name_superhero_photo, position)
+
         holder.superheroName.text = item.name
         holder.superheroRealName.text = item.realName
 
@@ -153,6 +189,7 @@ private class SuperheroesAdapter(
             .load(item.photo)
             .centerCrop()
             .apply(RequestOptions.circleCropTransform())
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder.superheroPhoto)
     }
 

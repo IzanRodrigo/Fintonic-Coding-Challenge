@@ -8,4 +8,7 @@
     <string name="superhero_detail_section_power_title">Power</string>
     <string name="superhero_detail_section_abilities_title">Abilities</string>
     <string name="superhero_detail_section_groups_title">Groups</string>
+    <string name="transition_name_superhero_name">superhero_name_%d</string>
+    <string name="transition_name_superhero_real_name">superhero_real_name_%d</string>
+    <string name="transition_name_superhero_photo">superhero_photo_%d</string>
 </resources>

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.izanrodrigo.fintonictestchallenge.R
 import com.izanrodrigo.fintonictestchallenge.data.SuperheroDetail
@@ -40,6 +42,8 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         data = savedInstanceState?.getParcelable(ARG_DATA)
+        sharedElementEnterTransition = TransitionInflater.from(context)
+            .inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -51,8 +55,12 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         presenter.attachView(this)
+
+        superheroName.transitionName = args.superheroNameTransitionName
+        superheroRealName.transitionName = args.superheroRealNameTransitionName
+        superheroPhoto.transitionName = args.superheroPhotoTransitionName
+
 
         errorText.setText(R.string.superhero_detail_error_load)
         retryButton.setOnClickListener {
@@ -63,6 +71,7 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
             .load(superhero.photo)
             .centerCrop()
             .apply(RequestOptions.circleCropTransform())
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(superheroPhoto)
 
         superheroName.text = superhero.name
@@ -86,9 +95,9 @@ class SuperheroDetailFragment : Fragment(), SuperheroDetailView {
         data?.let { outState.putParcelable(ARG_DATA, it) }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         presenter.detachView()
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     override fun showLoading() {
