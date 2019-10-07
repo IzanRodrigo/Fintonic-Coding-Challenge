@@ -7,7 +7,7 @@ The architecture used is based on MVP (Model View Presenter).
 - _View_: Doesn't manage any business logic, just the UI widgets and the navigation between screens.
 - _Presenter_: It acts as a bridge between the _View_ and the _Model_. Could listen to _Model_ changes to update the _View_.
 
-Since the app is wrote entirely in Kotlin, I decided to use the following libraries:
+Since the app is written entirely in Kotlin, I decided to use the following libraries:
 - [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) to handle the background work. 
 - [Koin](https://insert-koin.io/) to handle the Dependency Injection.
 
